@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Tic-tac-toe</title>
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="app.css">
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/lodash/lodash.min.js"></script>
+
+  <script src="app.js"></script>
+  <script src="game/gameService.js"></script>
+  <script src="game/gameController.js"></script>
+</head>
+
+<body ng-app="main">
+
+    <h1>Tic-tac-toe</h1>
+    
+    <div class="content" ng-controller="MainCtrl">
+      
+      <button ng-click="start()">Start again</button>
+      <p>
+
+      <table class="table table-bordered" style="width: 9em">
+        <tr ng-repeat="row in state.rows">
+          <td class="md-col-1" ng-repeat="cell in row track by cell.id">
+           <a style="font-size:18px;" ng-click="click(cell)">
+             &nbsp;{{ cell.val }}&nbsp;</a>
+          </td>
+        </tr>
+      </table>
+
+      <p>
+      <span id="game-state" ng-if="state.gameOver">Game over</span>
+      <span ng-if="state.winner">, winner is {{ state.winner }}</span>
+      
+    </div>
+</body>
+</html>

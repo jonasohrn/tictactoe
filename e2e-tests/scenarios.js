@@ -17,14 +17,14 @@ describe('Tic tac toe', function() {
     anchors = rowElements.all(by.tagName('a'));
     expect(anchors.count()).toEqual(9);
 
-      anchors.each(function(element, index) {
-          element.getText().then(function (text) {
+    anchors.each(function(element, index) {
+      element.getText().then(function (text) {
 
-              console.log(index, text);
-              expect(text).toMatch(/\W+/);
-          });
-          // same result as expect(element.getText()).toMatch(/\W+/);
+          console.log(index, text);
+          expect(text).toMatch(/\W+/);
       });
+      // same result as expect(element.getText()).toMatch(/\W+/);
+    });
 
     expect(element(by.id('game-state')).isPresent()).toBe(false);
     expect(element(by.binding('state.winner')).isPresent()).toBe(false);

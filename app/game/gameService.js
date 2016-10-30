@@ -22,7 +22,8 @@ angular.module('main')
                     var cell = { val : ' ', id : ''+row+'-'+col };
                     table.rows[row][col] = cell;
                     table.cols[col][row] = cell;
-                }}
+                }
+            }
             for (row=0; row<3; row++) {
                 table.diagonals[0][row] = table.rows[row][row];
                 table.diagonals[1][row] = table.rows[row][2-row];
@@ -39,7 +40,7 @@ angular.module('main')
                 return;
             }
             userSet(cell);
-            evaluateGameOver() || nextMove();
+            evaluateGameOver() || nextMove(computerMove());
         }
 
         function start() {
@@ -57,16 +58,26 @@ angular.module('main')
             return state.gameOver;
         }
 
-        function nextMove() {
-            var iCanWinLines= _.filter(table.lines(), iCanWin);
-            var threatLines = _.filter(table.lines(), isThreat);
-            var anyEmpty    = _.filter(table.lines(), hasEmpty);
-            // Now pick the first line of these, notice the order
-            var selectedLine = _.flatten([iCanWinLines, threatLines, anyEmpty])[0];
-            computerSet(_.find(selectedLine, isEmpty));
-
+        function nextMove(cell) {
+            if (!cell || !cell.val) {
+                console.log("illegal cell "+cell);
+                return;
+            }
+            computerSet(cell);
             evaluateGameOver();
         }
+
+        function computerMove() {
+            var cell = findCell(iCanWin,  isEmpty)
+                    || findCell(isThreat, isEmpty)
+                    || findCell(hasEmpty, isEmpty);
+            return cell;
+        }
+
+        // Find table cell from line- and cell predicates
+        function findCell(linePred, cellPred) {
+            return _.chain(table.lines()).filter(linePred).flatten().find(cellPred).value();
+        };
 
         function userSet(cell) {
             cell.val = 'X';

@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('main')
-    .factory('gameService', function gameServiceFactory() {
+    .factory('GameService', function gameServiceFactory() {
 
         var table = {
             rows: [[],[],[]],
             cols: [[],[],[]],
-            diagonals: [[],[]]
+            diagonals: [[],[]],
+            // lines are the 8 lines to check for wins/threats sharing the 9 cell instances
+            lines: function() {
+                return _.flatten([table.rows, table.cols, table.diagonals]);
+            }
         };
 
         var state = {
@@ -28,11 +32,6 @@ angular.module('main')
                 table.diagonals[0][row] = table.rows[row][row];
                 table.diagonals[1][row] = table.rows[row][2-row];
             }
-            // lines are the 8 lines to check for wins/threats sharing the 9 cell instances
-            table.lines = function() {
-                var lines = _.flatten([table.rows, table.cols, table.diagonals]);
-                return lines;
-            }
         }
 
         function userClicked(cell) {
@@ -50,7 +49,7 @@ angular.module('main')
         }
 
         function evaluateGameOver() {
-            var allSameLine = _.find(table.lines(), isAllSame);
+            var allSameLine = _.find(table.lines(), isAllSet);
             if (allSameLine) {
                 state.winner = allSameLine[0].val === 'X' ? 'User' : 'Computer';
             }
@@ -77,7 +76,7 @@ angular.module('main')
         // Find table cell from line- and cell predicates
         function findCell(linePred, cellPred) {
             return _.chain(table.lines()).filter(linePred).flatten().find(cellPred).value();
-        };
+        }
 
         function userSet(cell) {
             cell.val = 'X';
@@ -92,14 +91,14 @@ angular.module('main')
         function isThreat(line) {
             return someoneCanWin(line, isX);
         }
-        function someoneCanWin(line, isSomeone) {
-            return _.filter(line, isSomeone).length === 2 && _.filter(line, isEmpty).length === 1;
+        function someoneCanWin(line, cellPred) {
+            return line.filter(cellPred).length === 2 && line.filter(isEmpty).length === 1;
         }
         function hasEmpty(line) {
-            return _.some(line, isEmpty);
+            return line.some(isEmpty);
         }
-        function isAllSame(line) {
-            return _.all(line, isX) || _.all(line, isO);
+        function isAllSet(line) {
+            return line.every(isX) || line.every(isO);
         }
 
         function isEmpty(cell) {
@@ -111,7 +110,6 @@ angular.module('main')
         function isO(cell) {
             return cell.val === 'O';
         }
-
 
         var gameService = {
             initTable : initTable,

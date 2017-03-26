@@ -7,94 +7,93 @@ describe('myApp game module', function() {
 
     describe('game service', function(){
 
-        it('gameService initial state after start', inject(function(gameService) {
-            expect(gameService.state).toBeDefined();
+        it('gameService initial state after start', inject(function(GameService) {
+            expect(GameService.state).toBeDefined();
 
-            expect(gameService.state().gameOver).toEqual(true);
-            gameService.start();
-            expect(gameService.state().gameOver).toEqual(false);
+            expect(GameService.state().gameOver).toEqual(true);
+            GameService.start();
+            expect(GameService.state().gameOver).toEqual(false);
 
-            expect(gameService.state().winner).toBeUndefined();
-            expect(gameService.state().rows).toBeDefined();
+            expect(GameService.state().winner).toBeUndefined();
+            expect(GameService.state().rows).toBeDefined();
         }));
 
-        it('gameService session User wins', inject(function(gameService) {
+        it('gameService session User wins', inject(function(GameService) {
 
-            gameService.start();
+            GameService.start();
 
-            var cell00 = gameService.state().rows[0][0];
+            var cell00 = GameService.state().rows[0][0];
             expect(cell00).toBeDefined();
 
             // Click on first cell 0,0
-            gameService.userClicked(cell00);
-            expect(gameService.state().gameOver).toEqual(false);
+            GameService.userClicked(cell00);
+            expect(GameService.state().gameOver).toEqual(false);
             expect(cell00.val).toEqual('X');
 
-            expect(_.pluck(gameService.state().rows[0], 'val')).toEqual(['X','O',' ']);
-            expectValues(gameService,
+            expectValues(GameService,
                  ['X','O',' ',
                   ' ',' ',' '
                  ,' ',' ',' ']);
 
-            gameService.userClicked(gameService.state().rows[1][0]);
-            expectValues(gameService,
+            GameService.userClicked(GameService.state().rows[1][0]);
+            expectValues(GameService,
                  ['X','O',' ',
                   'X',' ',' '
                  ,'O',' ',' ']);
 
-            gameService.userClicked(gameService.state().rows[1][1]);
-            expectValues(gameService,
+            GameService.userClicked(GameService.state().rows[1][1]);
+            expectValues(GameService,
                  ['X','O',' ',
                   'X','X','O'     // <- computer selects first threat on 2nd row
                  ,'O',' ',' ']);
 
-            gameService.userClicked(gameService.state().rows[2][2]);
-            expectValues(gameService,
+            GameService.userClicked(GameService.state().rows[2][2]);
+            expectValues(GameService,
                  ['X','O',' ',
                   'X','X','O'
                  ,'O',' ','X']);
 
-            expect(gameService.state().gameOver).toEqual(true);
-            expect(gameService.state().winner).toEqual('User');
+            expect(GameService.state().gameOver).toEqual(true);
+            expect(GameService.state().winner).toEqual('User');
         }));
 
     });
 
-    it('gameService session Computer wins despite threat', inject(function(gameService) {
+    it('gameService session Computer wins despite threat', inject(function(GameService) {
 
-        gameService.start();
+        GameService.start();
 
-        gameService.userClicked(gameService.state().rows[2][1]);
-        expectValues(gameService,
+        GameService.userClicked(GameService.state().rows[2][1]);
+        expectValues(GameService,
             ['O',' ',' ',
              ' ',' ',' '
             ,' ','X',' ']);
 
-        gameService.userClicked(gameService.state().rows[1][1]);
-        expectValues(gameService,
+        GameService.userClicked(GameService.state().rows[1][1]);
+        expectValues(GameService,
             ['O','O',' ',
              ' ','X',' '
             ,' ','X',' ']);
 
-        gameService.userClicked(gameService.state().rows[0][2]);
-        expectValues(gameService,
+        GameService.userClicked(GameService.state().rows[0][2]);
+        expectValues(GameService,
             ['O','O','X',
              ' ','X',' '
             ,'O','X',' ']);
 
-        gameService.userClicked(gameService.state().rows[2][2]);
-        expectValues(gameService,
+        GameService.userClicked(GameService.state().rows[2][2]);
+        expectValues(GameService,
             ['O','O','X',
              'O','X',' '
             ,'O','X','X']);
 
-        expect(gameService.state().gameOver).toEqual(true);
-        expect(gameService.state().winner).toEqual('Computer');
+        expect(GameService.state().gameOver).toEqual(true);
+        expect(GameService.state().winner).toEqual('Computer');
     }));
 
 
-    function expectValues(gameService, cellValues) {
-        expect(_.chain(gameService.state().rows)
+    function expectValues(GameService, cellValues) {
+        expect(_.chain(GameService.state().rows)
             .flatten(true)
             .pluck('val')
             .value()).toEqual(cellValues);

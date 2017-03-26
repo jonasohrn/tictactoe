@@ -1,16 +1,16 @@
 'use strict';
 
-angular.module('main').controller('MainCtrl', function ($scope, gameService) {
+angular.module('main').controller('MainCtrl', function ($scope, GameService) {
 
-    $scope.state = gameService.state();
+    $scope.state = GameService.state();
 
     $scope.click = function(cell) {
-        gameService.userClicked(cell);
-    }
+        GameService.userClicked(cell);
+    };
 
     $scope.start = function() {
-        gameService.start();
-    }
+        GameService.start();
+    };
 
     $scope.start();
 });

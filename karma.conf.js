@@ -4,7 +4,7 @@ module.exports = function(config){
     basePath : './',
 
     files : [
-      'app/bower_components/lodash/lodash.min.js',
+      'app/bower_components/lodash/dist/lodash.min.js',
       'app/bower_components/angular/angular.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       'app/app.js',

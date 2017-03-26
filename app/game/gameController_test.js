@@ -21,11 +21,11 @@ describe('myApp game module', function() {
           expect(scope.state.gameOver).toEqual(false);
         });
 
-        it('should propagate clicked to gameService', inject(function(gameService) {
+        it('should propagate clicked to gameService', inject(function(GameService) {
 
-            spyOn(gameService, 'userClicked');
+            spyOn(GameService, 'userClicked');
             scope.click({});
-            expect(gameService.userClicked).toHaveBeenCalled();
+            expect(GameService.userClicked).toHaveBeenCalled();
         }));
 
     });

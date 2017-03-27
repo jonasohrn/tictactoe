@@ -95,7 +95,7 @@ describe('myApp game module', function() {
     function expectValues(GameService, cellValues) {
         expect(_.chain(GameService.state().rows)
             .flatten(true)
-            .pluck('val')
+            .map('val')
             .value()).toEqual(cellValues);
     }
 });

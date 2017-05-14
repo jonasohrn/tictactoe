@@ -1,5 +1,10 @@
 'use strict';
 
+/*
+ Maybe the code should be refactored into smaller parts:
+ GameBoard - table and initTable()
+ ComputerPlayer - the "smart" opponent
+ */
 angular.module('main')
     .factory('GameService', function gameServiceFactory() {
 
@@ -7,7 +12,7 @@ angular.module('main')
             rows: [[],[],[]],
             cols: [[],[],[]],
             diagonals: [[],[]],
-            // lines are the 8 lines to check for wins/threats sharing the 9 cell instances
+            // lines are the 8 lines to check for wins/threats sharing the 9 cell objects
             lines: function() {
                 return _.flatten([table.rows, table.cols, table.diagonals]);
             }
@@ -35,7 +40,7 @@ angular.module('main')
         }
 
         function userClicked(cell) {
-            if (state.gameOver || !isEmpty(cell)) {
+            if (state.gameOver || !cellEmpty(cell)) {
                 return;
             }
             userSet(cell);
@@ -48,12 +53,16 @@ angular.module('main')
             initTable();
         }
 
+        /*
+        We could refactor code so that winner & gameOver are not properties set in state but evaluated instead
+        such as state.winner() and state.gameOver()
+        */
         function evaluateGameOver() {
             var allSameLine = _.find(table.lines(), isAllSet);
             if (allSameLine) {
                 state.winner = allSameLine[0].val === 'X' ? 'User' : 'Computer';
             }
-            state.gameOver = state.winner && true || !_.some(table.lines(), hasEmpty)
+            state.gameOver = state.winner && true || !_.some(table.rows, hasEmpty);
             return state.gameOver;
         }
 
@@ -67,13 +76,14 @@ angular.module('main')
         }
 
         function computerMove() {
-            var cell = findCell(iCanWin,  isEmpty)
-                    || findCell(isThreat, isEmpty)
-                    || findCell(hasEmpty, isEmpty);
+            var cell = findCell(iCanWin,  cellEmpty)
+                    || findCell(isThreat, cellEmpty)
+                    || findCell(hasEmpty, cellEmpty);
             return cell;
         }
 
-        // Find table cell from line- and cell predicates
+        // Find table cel   l from line- and cell predicates
+        // FIXME: cellPred is always cellEmpty - refactor
         function findCell(linePred, cellPred) {
             return _.chain(table.lines()).filter(linePred).flatten().find(cellPred).value();
         }
@@ -92,16 +102,16 @@ angular.module('main')
             return someoneCanWin(line, isX);
         }
         function someoneCanWin(line, cellPred) {
-            return line.filter(cellPred).length === 2 && line.filter(isEmpty).length === 1;
+            return line.filter(cellPred).length === 2 && line.filter(cellEmpty).length === 1;
         }
         function hasEmpty(line) {
-            return line.some(isEmpty);
+            return line.some(cellEmpty);
         }
         function isAllSet(line) {
             return line.every(isX) || line.every(isO);
         }
 
-        function isEmpty(cell) {
+        function cellEmpty(cell) {
             return cell.val === ' ';
         }
         function isX(cell) {
@@ -111,6 +121,7 @@ angular.module('main')
             return cell.val === 'O';
         }
 
+        // Revealing module pattern
         var gameService = {
             initTable : initTable,
             start : start,

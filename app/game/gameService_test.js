@@ -2,7 +2,6 @@
 
 describe('myApp game module', function() {
 
-
     beforeEach(module('main'));
 
     describe('game service', function(){
@@ -16,6 +15,18 @@ describe('myApp game module', function() {
 
             expect(GameService.state().winner).toBeUndefined();
             expect(GameService.state().rows).toBeDefined();
+        }));
+
+        it('Computer detects threat', inject(function(GameService) {
+
+            GameService.start();
+
+            var firstRow = GameService.state().rows[0];
+            firstRow[0].val = 'X';
+            var cell01 = firstRow[1];
+            GameService.userClicked(cell01);
+            expect(cell01.val).toEqual('X');
+            expect(firstRow[2].val).toEqual('O');
         }));
 
         it('gameService session User wins', inject(function(GameService) {

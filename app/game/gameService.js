@@ -40,7 +40,7 @@ angular.module('main')
         }
 
         function userClicked(cell) {
-            if (state.gameOver || !cellEmpty(cell)) {
+            if (state.gameOver) {
                 return;
             }
             userSet(cell);
@@ -62,7 +62,7 @@ angular.module('main')
             if (allSameLine) {
                 state.winner = allSameLine[0].val === 'X' ? 'User' : 'Computer';
             }
-            state.gameOver = state.winner && true || !_.some(table.rows, hasEmpty);
+            state.gameOver = state.winner && true || false;
             return state.gameOver;
         }
 
@@ -76,8 +76,7 @@ angular.module('main')
         }
 
         function computerMove() {
-            var cell = findEmptyCell(iCanWin)
-                    || findEmptyCell(isThreat)
+            var cell = findEmptyCell(isThreat)
                     || findEmptyCell(hasEmpty);
             return cell;
         }
@@ -94,9 +93,6 @@ angular.module('main')
             cell.val = 'O';
         }
 
-        function iCanWin(line) {
-            return someoneCanWin(line, isO);
-        }
         function isThreat(line) {
             return someoneCanWin(line, isX);
         }

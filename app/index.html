@@ -28,7 +28,7 @@
 
       <table class="table table-bordered" style="width: 9em">
         <tr ng-repeat="row in state.rows">
-          <td class="md-col-1" ng-repeat="cell in row track by cell.id">
+          <td class="md-col-1" ng-repeat="cell in row">
            <a style="font-size:18px;" ng-click="click(cell)">
              &nbsp;{{ cell.val }}&nbsp;</a>
           </td>
@@ -38,7 +38,7 @@
       <p>
       <span id="game-state" ng-if="state.gameOver">Game over</span>
       <span ng-if="state.winner">, winner is {{ state.winner }}</span>
-      
+
     </div>
 </body>
 </html>

@@ -28,7 +28,7 @@ angular.module('main')
 
             for (var row=0; row<3; row++) {
                 for (var col=0; col<3; col++) {
-                    var cell = { val : ' ', id : ''+row+'-'+col };
+                    var cell = { val : ' ' };
                     table.rows[row][col] = cell;
                     table.cols[col][row] = cell;
                 }
@@ -76,16 +76,15 @@ angular.module('main')
         }
 
         function computerMove() {
-            var cell = findCell(iCanWin,  cellEmpty)
-                    || findCell(isThreat, cellEmpty)
-                    || findCell(hasEmpty, cellEmpty);
+            var cell = findEmptyCell(iCanWin)
+                    || findEmptyCell(isThreat)
+                    || findEmptyCell(hasEmpty);
             return cell;
         }
 
-        // Find table cel   l from line- and cell predicates
-        // FIXME: cellPred is always cellEmpty - refactor
-        function findCell(linePred, cellPred) {
-            return _.chain(table.lines()).filter(linePred).flatten().find(cellPred).value();
+        // Find empty table cell from line predicate
+        function findEmptyCell(linePred) {
+            return _.chain(table.lines()).filter(linePred).flatten().find(cellEmpty).value();
         }
 
         function userSet(cell) {

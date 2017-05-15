@@ -11,6 +11,6 @@ TODO: lägga till delay med/utan $promise för att påvisa Protractors förmåga
 ### Handhavande
 
 Projektet är baserat på angular-seed (genererat av Webstorm):
-[https://github.com/angular/angular-seed/](angular-seed).
+[angular-seed](https://github.com/angular/angular-seed/).
 
 Läs deras README.md för info om hur npm-kommandon körs etc.
